@@ -30,6 +30,7 @@ class WholeSlideImage(object):
 #         self.name = ".".join(path.split("/")[-1].split('.')[:-1])
         self.name = os.path.splitext(os.path.basename(path))[0]
         self.wsi = openslide.open_slide(path)
+        print(self.wsi.level_dimensions)
         self.level_downsamples = self._assertLevelDownsamples()
         self.level_dim = self.wsi.level_dimensions
     
