@@ -274,34 +274,43 @@ def seg_and_patch(
     return seg_times, patch_times
 
 
-parser = argparse.ArgumentParser(description="seg and patch")
-parser.add_argument(
-    "--source", type=str, help="path to folder containing raw wsi image files"
-)
-parser.add_argument("--step_size", type=int, default=256, help="step_size")
-parser.add_argument("--patch_size", type=int, default=256, help="patch_size")
-parser.add_argument("--patch", default=False, action="store_true")
-parser.add_argument("--seg", default=False, action="store_true")
-parser.add_argument("--stitch", default=False, action="store_true")
-parser.add_argument("--no_auto_skip", default=True, action="store_false")
-parser.add_argument("--save_dir", type=str, help="directory to save processed data")
-parser.add_argument(
-    "--preset",
-    default=None,
-    type=str,
-    help="predefined profile of default segmentation and filter parameters (.csv)",
-)
-parser.add_argument(
-    "--patch_level", type=int, default=0, help="downsample level at which to patch"
-)
-parser.add_argument(
-    "--process_list",
-    type=str,
-    default=None,
-    help="name of list of images to process with parameters (.csv)",
-)
-
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="seg and patch")
+    parser.add_argument(
+        "--source",
+        type=str,
+        help="path to folder containing raw wsi image files",
+        default="/voyager/datasets/st_data/htanpdac/tifs/proctifs",
+    )
+    parser.add_argument(
+        "--save_dir",
+        type=str,
+        help="directory to save processed data",
+        default="/voyager/datasets/st_data/htanpdac/procs",
+    )
+
+    parser.add_argument("--step_size", type=int, default=256, help="step_size")
+    parser.add_argument("--patch_size", type=int, default=256, help="patch_size")
+    parser.add_argument("--patch", default=False, action="store_true")
+    parser.add_argument("--seg", default=False, action="store_true")
+    parser.add_argument("--stitch", default=False, action="store_true")
+    parser.add_argument("--no_auto_skip", default=True, action="store_false")
+
+    parser.add_argument(
+        "--preset",
+        default=None,
+        type=str,
+        help="predefined profile of default segmentation and filter parameters (.csv)",
+    )
+    parser.add_argument(
+        "--patch_level", type=int, default=0, help="downsample level at which to patch"
+    )
+    parser.add_argument(
+        "--process_list",
+        type=str,
+        default=None,
+        help="name of list of images to process with parameters (.csv)",
+    )
     args = parser.parse_args()
 
     patch_save_dir = os.path.join(args.save_dir, "patches")
