@@ -142,7 +142,6 @@ def seg_and_patch(
             current_filter_params = filter_params.copy()
             current_seg_params = seg_params.copy()
             current_patch_params = patch_params.copy()
-
         else:
             current_vis_params = {}
             current_filter_params = {}
@@ -175,7 +174,6 @@ def seg_and_patch(
         if current_vis_params["vis_level"] < 0:
             if len(WSI_object.level_dim) == 1:
                 current_vis_params["vis_level"] = 0
-
             else:
                 wsi = WSI_object.getOpenSlide()
                 best_level = wsi.get_best_level_for_downsample(64)
@@ -230,9 +228,16 @@ def seg_and_patch(
 
         patch_time_elapsed = -1  # Default time
         if patch:
+            # adhoc for differently scanned slides
+            seplist = ["GSM3036911", "GSM4100722", "GSM4100721"]
+            tpl = patch_level
+            for sep in seplist:
+                if sep in full_path:
+                    tpl = tpl + 1
+
             current_patch_params.update(
                 {
-                    "patch_level": patch_level,
+                    "patch_level": tpl,
                     "patch_size": patch_size,
                     "step_size": step_size,
                     "save_path": patch_save_dir,
@@ -289,8 +294,8 @@ if __name__ == "__main__":
         default="/voyager/datasets/st_data/htanpdac/procs",
     )
 
-    parser.add_argument("--step_size", type=int, default=256, help="step_size")
-    parser.add_argument("--patch_size", type=int, default=256, help="patch_size")
+    parser.add_argument("--step_size", type=int, default=224, help="step_size")
+    parser.add_argument("--patch_size", type=int, default=224, help="patch_size")
     parser.add_argument("--patch", default=False, action="store_true")
     parser.add_argument("--seg", default=False, action="store_true")
     parser.add_argument("--stitch", default=False, action="store_true")
@@ -343,22 +348,22 @@ if __name__ == "__main__":
 
     seg_params = {
         "seg_level": 3,
-        "sthresh": 22,
-        "mthresh": 19,
+        "sthresh": 8,
+        "mthresh": 7,
         "close": 4,
         "use_otsu": False,
         "keep_ids": "none",
         "exclude_ids": "none",
     }
-    seg_params = {
-        "seg_level": -1,
-        "sthresh": 14,
-        "mthresh": 13,
-        "close": 4,
-        "use_otsu": False,
-        "keep_ids": "none",
-        "exclude_ids": "none",
-    }
+    # seg_params = {
+    #     "seg_level": -1,
+    #     "sthresh": 14,
+    #     "mthresh": 13,
+    #     "close": 4,
+    #     "use_otsu": False,
+    #     "keep_ids": "none",
+    #     "exclude_ids": "none",
+    # }
     filter_params = {"a_t": 100, "a_h": 4, "max_n_holes": 8}
     vis_params = {"vis_level": -1, "line_thickness": 100}
     patch_params = {"use_padding": True, "contour_fn": "four_pt"}
